@@ -1,38 +1,21 @@
 import 'package:flutter/material.dart';
-import 'screens/splash_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'app/app.dart';
+import 'core/storage/preferences_service.dart';
+import 'features/auth/presentation/providers/auth_provider.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
-}
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  // Initialize persistent preferences
+  final preferencesService = await PreferencesService.init();
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Task Manager',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF4F46E5), // Indigo primary
-          brightness: Brightness.light,
-        ),
-        appBarTheme: const AppBarTheme(
-          centerTitle: false,
-          elevation: 0,
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black87,
-        ),
-        scaffoldBackgroundColor: const Color(0xFFF8FAFC), // Modern slate white
-        cardTheme: const CardThemeData(
-          color: Colors.white,
-          elevation: 0,
-        ),
-      ),
-      home: const SplashScreen(),
-    );
-  }
+  runApp(
+    ProviderScope(
+      overrides: [
+        preferencesServiceProvider.overrideWithValue(preferencesService),
+      ],
+      child: const TaskManagerApp(),
+    ),
+  );
 }
