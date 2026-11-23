@@ -2,11 +2,11 @@ import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart';
 
 class ApiConstants {
-  // Configurable base host. Defaults to smart platform detection.
+  // Configurable base host. Defaults to live cloud server.
   static String? customHost;
 
-  // Your PC's LAN IPv4 address (from ipconfig)
-  static const String pcLanIp = '10.10.28.100';
+  // Live Production Server URL deployed on Render
+  static const String liveBaseUrl = 'https://task-manager-api-p4jk.onrender.com';
 
   static String get baseUrl {
     if (customHost != null && customHost!.trim().isNotEmpty) {
@@ -14,18 +14,7 @@ class ApiConstants {
       return host.startsWith('http') ? '$host/api' : 'http://$host:5000/api';
     }
 
-    if (kIsWeb) {
-      return 'http://localhost:5000/api';
-    }
-
-    try {
-      if (Platform.isAndroid) {
-        // Physical Android device connects directly to your PC's IP:
-        return 'http://$pcLanIp:5000/api';
-      }
-    } catch (_) {}
-
-    return 'http://localhost:5000/api';
+    return '$liveBaseUrl/api';
   }
 
   // Auth endpoints
